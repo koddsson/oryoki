@@ -19,7 +19,7 @@ function Oryoki() {
 
 	this.windows = [];
 	this.focusedWindow = null;
-	this.windowsIndex = -1; // Index to make sure we assign unique Ids
+	this.windowsIndex = 0; // Index to make sure we assign unique Ids
 	this.windowCount = 0; // Counts the number of windows currently open
 
 	this.attachEvents();
@@ -53,14 +53,7 @@ Oryoki.prototype.createWindow = function(e, url) {
 	c.log('[Oryoki] Creating new window');
 	// @endif
 
-	this.windowsIndex++;
-	this.windowCount++;
-
-	// @if NODE_ENV='development'
-	c.log('[Oryoki] Currently', this.windowCount, 'windows open');
-	// @endif
-
-	if(this.windowCount == 1) {
+	if(this.windowCount == 0) {
 		// No window open -> create a centered window
 		this.windows[this.windowsIndex] = new Window({
 			'id' : this.windowsIndex,
@@ -82,6 +75,13 @@ Oryoki.prototype.createWindow = function(e, url) {
 		});
 	}
 
+	this.windowsIndex++;
+	this.windowCount++;
+
+	// @if NODE_ENV='development'
+	c.log('[Oryoki] Currently', this.windowCount, 'windows open');
+	// @endif
+
 }
 
 Oryoki.prototype.onFocusChange = function(w) {
@@ -96,14 +96,13 @@ Oryoki.prototype.onFocusChange = function(w) {
 
 Oryoki.prototype.closeWindow = function() {
 
-	// This function to be triggered when click on emulated traffic lights.
+	// EMULATED TRAFFIC LIGHTS CLICK
 
 	// @if NODE_ENV='development'
-	c.log('[Oryoki] Close window');
+	c.log('[Oryoki] Requesting closing window #'+ this.focusedWindow.id);
 	// @endif
 	
 	this.focusedWindow.close();
-	this.onCloseWindow();
 
 }
 
@@ -123,6 +122,10 @@ Oryoki.prototype.onCloseWindow = function() {
 	if(this.windowCount == 0) {
 		this.focusedWindow = null;
 	}
+
+	// @if NODE_ENV='development'
+	c.log('[Oryoki] Currently', this.windowCount, 'windows open');
+	// @endif
 
 }
 
